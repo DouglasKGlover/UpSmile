@@ -3,18 +3,15 @@
     <div id="home">
       <h1>Home</h1>
 
-      <SmileDetect />
+      <ClientOnly>
+        <SmileDetect />
+      </ClientOnly>
     </div>
   </Layout>
 </template>
 
 <script>
-import SmileDetect from "~/components/SmileDetect.vue";
-export default {
-  components: {
-    SmileDetect,
-  },
-};
+export default {};
 </script>
 
 <style>
