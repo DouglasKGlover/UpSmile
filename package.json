@@ -1,0 +1,13 @@
+{
+  "name": "upsmile",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "face-api.js": "^0.22.2",
+    "gridsome": "^0.7.0"
+  }
+}
