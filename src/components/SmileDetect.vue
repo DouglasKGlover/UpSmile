@@ -1,7 +1,16 @@
 <template>
   <div>
     <h2>Smile for the camera</h2>
-    <video id="inputVideo" autoplay muted :class="{ smiling: smiling }"></video>
+    <p>
+      Looking <span v-if="lookingLeft">Left</span>
+      <span v-else-if="lookingRight">Right</span>
+      <span v-else>...</span>
+    </p>
+    <p>
+      <span v-if="!smiling">Not </span>
+      Smiling
+    </p>
+    <video id="inputVideo" autoplay muted></video>
   </div>
 </template>
 
@@ -12,6 +21,8 @@ export default {
     return {
       trackingAllowed: true,
       smiling: false,
+      lookingLeft: false,
+      lookingRight: false,
     };
   },
   methods: {
@@ -36,6 +47,15 @@ export default {
         .withFaceLandmarks()
         .withFaceExpressions();
 
+      if (!detectionsWithExpressions.length) {
+        return;
+      }
+
+      const nosePosition =
+        detectionsWithExpressions[0].landmarks.relativePositions[30].x;
+      this.lookingLeft = nosePosition >= 0.65;
+      this.lookingRight = nosePosition <= 0.35;
+
       this.smiling = detectionsWithExpressions[0].expressions.happy > 0.7;
     },
   },
@@ -45,10 +65,21 @@ export default {
       this.detectFace();
     }, 100);
   },
+  watch: {
+    smiling() {
+      if (this.smiling) {
+        console.log("Smiling!");
+      }
+    },
+  },
 };
 </script>
 
 <style>
+body {
+  font-family: arial;
+}
+
 video {
   border: 5px solid transparent;
 }
