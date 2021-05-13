@@ -1,32 +1,58 @@
 <template>
   <div>
-    <h2>Smile detect</h2>
-    <img src="/smiling-test-1.jpg" alt="stock photo" id="test-human" />
-    <img src="/test_tree.png" alt="stock photo" id="test-tree" />
+    <h2>Smile for the camera</h2>
+    <video id="inputVideo" autoplay muted :class="{ smiling: smiling }"></video>
   </div>
 </template>
 
 <script>
 import * as faceapi from "face-api.js";
 export default {
+  data() {
+    return {
+      trackingAllowed: true,
+      smiling: false,
+    };
+  },
   methods: {
-    async initDetection() {
+    loadVideo() {
+      const videoEl = document.getElementById("inputVideo");
+      navigator.getUserMedia(
+        { video: {} },
+        (stream) => (videoEl.srcObject = stream),
+        (err) => console.error(err)
+      );
+    },
+    async detectFace() {
+      const videoEl = document.getElementById("inputVideo");
       const MODEL_URL = "/models";
+
       await faceapi.loadFaceLandmarkModel(MODEL_URL);
       await faceapi.loadFaceExpressionModel(MODEL_URL);
       await faceapi.loadTinyFaceDetectorModel(MODEL_URL);
 
       const detectionsWithExpressions = await faceapi
-        .detectAllFaces(["test-human"], new faceapi.TinyFaceDetectorOptions())
+        .detectAllFaces(videoEl, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceExpressions();
-      console.log(detectionsWithExpressions[0].expressions);
+
+      this.smiling = detectionsWithExpressions[0].expressions.happy > 0.7;
     },
   },
   mounted() {
-    this.initDetection();
+    this.loadVideo();
+    setInterval(() => {
+      this.detectFace();
+    }, 100);
   },
 };
 </script>
 
-<style></style>
+<style>
+video {
+  border: 5px solid transparent;
+}
+video.smiling {
+  border: 5px solid rgb(0, 221, 0);
+}
+</style>
