@@ -63,7 +63,7 @@ export default {
     this.loadVideo();
     setInterval(() => {
       this.detectFace();
-    }, 100);
+    }, 1000);
   },
   watch: {
     smiling() {
