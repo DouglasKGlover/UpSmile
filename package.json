@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "face-api.js": "^0.22.2",
-    "gridsome": "^0.7.0"
+    "gridsome": "^0.7.0",
+    "gsap": "^3.6.1"
   }
 }

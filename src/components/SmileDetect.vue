@@ -1,15 +1,5 @@
 <template>
   <div>
-    <h2>Smile for the camera</h2>
-    <p>
-      Looking <span v-if="lookingLeft">Left</span>
-      <span v-else-if="lookingRight">Right</span>
-      <span v-else>...</span>
-    </p>
-    <p>
-      <span v-if="!smiling">Not </span>
-      Smiling
-    </p>
     <video id="inputVideo" autoplay muted></video>
   </div>
 </template>
@@ -63,12 +53,22 @@ export default {
     this.loadVideo();
     setInterval(() => {
       this.detectFace();
-    }, 1000);
+    }, 200);
   },
   watch: {
     smiling() {
       if (this.smiling) {
-        console.log("Smiling!");
+        this.$emit("smiling");
+      }
+    },
+    lookingLeft() {
+      if (this.lookingLeft) {
+        this.$emit("looking-left");
+      }
+    },
+    lookingRight() {
+      if (this.lookingRight) {
+        this.$emit("looking-right");
       }
     },
   },
