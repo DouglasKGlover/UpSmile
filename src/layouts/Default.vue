@@ -1,6 +1,5 @@
 <template>
   <div class="layout">
-    <h1>{{ $static.siteName }}</h1>
     <slot />
   </div>
 </template>
@@ -21,4 +20,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+</style>

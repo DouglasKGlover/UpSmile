@@ -1,7 +1,17 @@
 <template>
-  <div>
-    <video id="inputVideo" autoplay muted></video>
-  </div>
+  <section id="webcam">
+    <video
+      id="inputVideo"
+      autoplay
+      muted
+      :class="{
+        smiling: smiling,
+        'looking-left': lookingLeft,
+        'looking-right': lookingRight,
+      }"
+    ></video>
+    <p>Smile Counter: {{ smileCounter }}</p>
+  </section>
 </template>
 
 <script>
@@ -11,6 +21,7 @@ export default {
     return {
       trackingAllowed: true,
       smiling: false,
+      smileCounter: 0,
       lookingLeft: false,
       lookingRight: false,
     };
@@ -43,8 +54,8 @@ export default {
 
       const nosePosition =
         detectionsWithExpressions[0].landmarks.relativePositions[30].x;
-      this.lookingLeft = nosePosition >= 0.65;
-      this.lookingRight = nosePosition <= 0.35;
+      this.lookingLeft = nosePosition <= 0.35;
+      this.lookingRight = nosePosition >= 0.65;
 
       this.smiling = detectionsWithExpressions[0].expressions.happy > 0.7;
     },
@@ -53,11 +64,12 @@ export default {
     this.loadVideo();
     setInterval(() => {
       this.detectFace();
-    }, 200);
+    }, 550);
   },
   watch: {
     smiling() {
       if (this.smiling) {
+        this.smileCounter++;
         this.$emit("smiling");
       }
     },
@@ -75,15 +87,32 @@ export default {
 };
 </script>
 
-<style>
-body {
-  font-family: arial;
+<style scoped>
+#webcam {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2;
 }
 
 video {
-  border: 5px solid transparent;
+  width: 100px;
+  border: 5px solid black;
+  transform: scaleX(-1);
 }
 video.smiling {
-  border: 5px solid rgb(0, 221, 0);
+  border-bottom: 5px solid rgb(0, 255, 0);
+}
+video.looking-left {
+  border-left: 5px solid rgb(0, 255, 0);
+}
+video.looking-right {
+  border-right: 5px solid rgb(0, 255, 0);
+}
+
+p {
+  font-size: 0.8em;
+  margin: 0;
+  text-align: center;
 }
 </style>

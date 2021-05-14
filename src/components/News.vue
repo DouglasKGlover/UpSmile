@@ -19,13 +19,28 @@ export default {
   },
   watch: {
     currentItem() {
-      console.table(this.currentItem, this.lastItem);
-      gsap.to("#item-" + this.lastItem, {
-        opacity: 0,
-      });
-      gsap.to("#item-" + this.currentItem, {
-        opacity: 1,
-      });
+      gsap.fromTo(
+        "#item-" + this.lastItem,
+        {
+          x: 0,
+          opacity: 1,
+        },
+        {
+          x: -50,
+          opacity: 0,
+        }
+      );
+      gsap.fromTo(
+        "#item-" + this.currentItem,
+        {
+          x: 50,
+          opacity: 0,
+        },
+        {
+          x: 0,
+          opacity: 1,
+        }
+      );
     },
     smiling() {
       if (this.smiling) {
@@ -42,32 +57,32 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 article {
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  width: 500px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   opacity: 0;
-  color: white;
-  font-size: 2em;
+  color: #222;
+  font-size: 10vw;
 }
 article:nth-of-type(1) {
-  background: red;
+  background: rgb(255, 196, 196);
   opacity: 1;
 }
 article:nth-of-type(2) {
-  background: blue;
+  background: rgb(189, 189, 255);
 }
 article:nth-of-type(3) {
-  background: green;
+  background: rgb(182, 255, 182);
 }
 article:nth-of-type(4) {
-  background: pink;
+  background: rgb(255, 217, 168);
 }
 article:nth-of-type(5) {
-  background: purple;
+  background: rgb(148, 207, 255);
 }
 </style>
