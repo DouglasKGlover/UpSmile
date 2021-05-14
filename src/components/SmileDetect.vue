@@ -54,8 +54,8 @@ export default {
 
       const nosePosition =
         detectionsWithExpressions[0].landmarks.relativePositions[30].x;
-      this.lookingLeft = nosePosition <= 0.35;
-      this.lookingRight = nosePosition >= 0.65;
+      this.lookingLeft = nosePosition >= 0.65;
+      this.lookingRight = nosePosition <= 0.35;
 
       this.smiling = detectionsWithExpressions[0].expressions.happy > 0.7;
     },
@@ -99,15 +99,16 @@ video {
   width: 100px;
   border: 5px solid black;
   transform: scaleX(-1);
+  background: black;
 }
 video.smiling {
   border-bottom: 5px solid rgb(0, 255, 0);
 }
 video.looking-left {
-  border-left: 5px solid rgb(0, 255, 0);
+  border-right: 5px solid rgb(0, 255, 0);
 }
 video.looking-right {
-  border-right: 5px solid rgb(0, 255, 0);
+  border-left: 5px solid rgb(0, 255, 0);
 }
 
 p {
