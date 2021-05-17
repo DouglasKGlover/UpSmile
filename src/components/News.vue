@@ -1,8 +1,22 @@
 <template>
   <section id="news-carousel">
     <div id="items">
-      <article v-for="(item, index) in items" :id="'item-' + index">
-        <p>{{ item }}</p>
+      <article
+        v-for="(item, index) in items"
+        :id="'item-' + index"
+        class="article"
+      >
+        <div class="content">
+          <img :src="item.thumbnail" alt="" class="background" />
+          <img :src="item.thumbnail" alt="" class="thumbnail" />
+          <h1>{{ item.title }}</h1>
+          <p><a :href="item.originalUrl" target="_blank">Article</a></p>
+          <p>
+            <a :href="'https://reddit.com' + item.redditUrl" target="_blank"
+              >Reddit discussion thread</a
+            >
+          </p>
+        </div>
       </article>
     </div>
   </section>
@@ -15,10 +29,13 @@ export default {
     currentItem: Number,
     lastItem: Number,
     items: Array,
-    smiling: Boolean,
   },
   watch: {
     currentItem() {
+      document.querySelector(".active").classList.remove("active");
+      document
+        .querySelector("#item-" + this.currentItem)
+        .classList.add("active");
       gsap.fromTo(
         "#item-" + this.lastItem,
         {
@@ -42,17 +59,21 @@ export default {
         }
       );
     },
-    smiling() {
-      if (this.smiling) {
-        gsap.to("#item-" + this.currentItem, {
-          y: -50,
-        });
-        gsap.to("#item-" + this.currentItem, {
-          y: 0,
-          delay: 0.5,
-        });
-      }
+  },
+  methods: {
+    checkForLoadedArticles() {
+      setTimeout(() => {
+        const articles = document.querySelectorAll(".article");
+        if (!articles.length) {
+          this.checkForLoadedArticles();
+        } else {
+          articles[0].classList.add("active");
+        }
+      }, 50);
     },
+  },
+  mounted() {
+    this.checkForLoadedArticles();
   },
 };
 </script>
@@ -67,22 +88,33 @@ article {
   height: 100%;
   opacity: 0;
   color: #222;
-  font-size: 10vw;
+  pointer-events: none;
 }
-article:nth-of-type(1) {
-  background: rgb(255, 196, 196);
+
+article.active {
+  pointer-events: all;
   opacity: 1;
 }
-article:nth-of-type(2) {
-  background: rgb(189, 189, 255);
+
+.content {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.25);
+  padding: 2vw;
 }
-article:nth-of-type(3) {
-  background: rgb(182, 255, 182);
+
+.thumbnail {
+  display: block;
 }
-article:nth-of-type(4) {
-  background: rgb(255, 217, 168);
-}
-article:nth-of-type(5) {
-  background: rgb(148, 207, 255);
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+  opacity: 0.3;
+  filter: blur(10px);
 }
 </style>

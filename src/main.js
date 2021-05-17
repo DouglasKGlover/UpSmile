@@ -8,4 +8,5 @@ export default function(Vue, { router, head, isClient }) {
   Vue.component("Layout", DefaultLayout);
   Vue.component("SmileDetect", () => import("@/components/SmileDetect.vue"));
   Vue.component("News", () => import("@/components/News.vue"));
+  Vue.component("SmileDisplay", () => import("@/components/SmileDisplay.vue"));
 }

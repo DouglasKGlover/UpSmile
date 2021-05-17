@@ -7,13 +7,9 @@
           v-on:looking-right="nextItem"
           v-on:smiling="setSmiling"
         />
-        <News
-          :items="items"
-          :currentItem="currentItem"
-          :lastItem="lastItem"
-          :smiling="smiling"
-        />
+        <News :items="items" :currentItem="currentItem" :lastItem="lastItem" />
       </ClientOnly>
+      <SmileDisplay :smiling="smiling" />
     </main>
   </Layout>
 </template>
@@ -25,10 +21,28 @@ export default {
       currentItem: 0,
       lastItem: 0,
       smiling: false,
-      items: [1, 2, 3, 4, 5],
+      items: [],
     };
   },
   methods: {
+    getNewsItems() {
+      const _self = this;
+      fetch("https://www.reddit.com/r/UpliftingNews/top/.json")
+        .then((response) => response.json())
+        .then((data) => {
+          data.data.children.forEach((e) => {
+            const thisData = e.data;
+            const thisNewsItem = {
+              title: thisData.title,
+              redditUrl: thisData.permalink,
+              originalUrl: thisData.url,
+              domain: thisData.domain,
+              thumbnail: thisData.thumbnail,
+            };
+            _self.items.push(thisNewsItem);
+          });
+        });
+    },
     updateItem(num) {
       const totalItems = this.items.length;
       this.lastItem = this.currentItem;
@@ -57,6 +71,9 @@ export default {
         this.smiling = false;
       }, 500);
     },
+  },
+  mounted() {
+    this.getNewsItems();
   },
 };
 </script>
